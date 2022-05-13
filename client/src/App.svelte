@@ -1,5 +1,11 @@
 <script lang="ts">
-	let todoItems = [];
+	interface TodoItem {
+		id?: number;
+		name: string;
+		completed: boolean;
+	}
+
+	let todoItems: Array<TodoItem> = [];
 
 	async function load() {
 		const response = await fetch("http://localhost:3100");
@@ -7,12 +13,12 @@
 		return todoItems;
 	}
 
-	let newItem = {
+	let newItem: TodoItem = {
 		name: "",
 		completed: false,
 	};
 
-	async function toggleItem(item) {
+	async function toggleItem(item: TodoItem) {
 		item.completed = !item.completed;
 		await save(item);
 	}
@@ -26,8 +32,7 @@
 	}
 
 	async function save(item) {
-		const creatingNewItem = item.id ? false : true;
-		console.log(creatingNewItem);
+		const creatingNewItem = item.id > -1 ? false : true;
 		const response = await fetch("http://localhost:3100", {
 			method: creatingNewItem ? "POST" : "PUT",
 			body: JSON.stringify(item),
